@@ -1,9 +1,20 @@
 Adldap authentication for Laravel 5
 ===================================
 
+This is a Laravel 5 package that provides an authentication driver using the
+[Adldap](https://github.com/adldap2/adldap2) library.
+
+It does not handle authorisation, but can be extended to do so.
+
 ## Installation
 
-In `config/app.php` set:
+Add this to your `composer.json`:
+
+    "adldap/laravel": "~1.0"
+
+## Configuration
+
+In `config/app.php` change the Auth service provider:
 
     'providers' => [
         ...
@@ -17,7 +28,7 @@ In `config/auth.php` set:
 
 The model can be any class that implements the
 [`Illuminate\Contracts\Auth\Authenticatable`](http://laravel.com/api/5.0/Illuminate/Contracts/Auth/Authenticatable.html)
-interface; see below.
+interface. A basic model is provided; this can be extended or replaced.
 
 Create `config/adldap.php` with:
 
@@ -34,7 +45,3 @@ Create `config/adldap.php` with:
     );
 
 Add the required keys to your local `.env` file.
-
-## Customisation
-
-The Auth user 

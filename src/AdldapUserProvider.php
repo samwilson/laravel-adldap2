@@ -30,7 +30,9 @@ class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider {
      * @return Authenticatable|null
      */
     public function retrieveById($identifier) {
-        return new $this->authModel([User::$usernameField => $identifier]);
+        $user = new $this->authModel();
+        $user->setAuthIdentifier($identifier);
+        return $user;
     }
 
     /**
@@ -64,7 +66,9 @@ class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider {
     public function retrieveByCredentials(array $credentials) {
         if ($this->adldap->authenticate($credentials[User::$usernameField], $credentials['password'])) {
             $userInfo = $this->adldap->user()->info($credentials[User::$usernameField])[0];
-            return new $this->authModel([User::$usernameField => $userInfo[User::$usernameField][0]]);
+            $user = new $this->authModel();
+            $user->setAuthIdentifier($userInfo[User::$usernameField][0]);
+            return $user;
         }
         return null;
     }
