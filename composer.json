@@ -1,0 +1,24 @@
+{
+    "name": "adldap2/laravel",
+    "description": "Laravel 5 Active Directory LDAP authentication driver.",
+    "keywords": ["Laravel", "LDAP", "authentication", "Laravel 5", "Adldap", "Active Directory", "auth"],
+    "autoload": {
+        "psr-4": {
+            "Adldap\\Laravel\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/auth": "~5.0",
+        "illuminate/config": "~5.0",
+        "illuminate/database": "~5.0",
+        "illuminate/session": "~5.0",
+        "illuminate/support": "~5.0",
+        "symfony/security": "~2.0",
+        "adldap2/adldap2": "*"
+    },
+    "require-dev": {
+        "mockery/mockery": "dev-master",
+        "symfony/var-dumper": "~2.0"
+    }
+}
