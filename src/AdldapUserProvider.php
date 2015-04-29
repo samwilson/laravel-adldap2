@@ -3,24 +3,36 @@
 namespace Adldap\Laravel;
 
 use Adldap\Adldap;
-use Adldap\Laravel\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider {
+class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider
+{
 
-    /** @var \Adldap\Adldap */
+    /**
+     * @var \Adldap\Adldap
+     */
     protected $adldap;
 
-    /** @var string The user classname, defined in `config/auth.php`. */
+    /**
+     * @var string The user classname, defined in `config/auth.php`.
+     */
     protected $authModel;
 
     /**
-     * @param Adldap $adldap
-     * @param string $user
+     * @var string The name of the unique user identifier.
+     * @see UserInterface::getAuthIdentifierName()
      */
-    public function __construct(Adldap $adldap, $authModel) {
+    protected $usernameField;
+
+    /**
+     * @param Adldap $adldap
+     * @param string $authModel
+     */
+    public function __construct(Adldap $adldap, $authModel)
+    {
         $this->adldap = $adldap;
         $this->authModel = $authModel;
+        $this->usernameField = $authModel::getAuthIdentifierName();
     }
 
     /**
@@ -29,7 +41,8 @@ class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider {
      * @param  mixed  $identifier
      * @return Authenticatable|null
      */
-    public function retrieveById($identifier) {
+    public function retrieveById($identifier)
+    {
         $user = new $this->authModel();
         $user->setAuthIdentifier($identifier);
         return $user;
@@ -42,7 +55,8 @@ class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider {
      * @param string $token
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByToken($identifier, $token) {
+    public function retrieveByToken($identifier, $token)
+    {
         
     }
 
@@ -53,7 +67,8 @@ class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider {
      * @param string $token
      * @return void
      */
-    public function updateRememberToken(Authenticatable $user, $token) {
+    public function updateRememberToken(Authenticatable $user, $token)
+    {
         
     }
 
@@ -63,11 +78,12 @@ class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider {
      * @param array $credentials
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByCredentials(array $credentials) {
-        if ($this->adldap->authenticate($credentials[User::$usernameField], $credentials['password'])) {
-            $userInfo = $this->adldap->user()->info($credentials[User::$usernameField])[0];
+    public function retrieveByCredentials(array $credentials)
+    {
+        if ($this->adldap->authenticate($credentials[$this->usernameField], $credentials['password'])) {
+            $userInfo = $this->adldap->user()->info($credentials[$this->usernameField])[0];
             $user = new $this->authModel();
-            $user->setAuthIdentifier($userInfo[User::$usernameField][0]);
+            $user->setAuthIdentifier($userInfo[$this->usernameField][0]);
             return $user;
         }
         return null;
@@ -80,8 +96,9 @@ class AdldapUserProvider implements \Illuminate\Contracts\Auth\UserProvider {
      * @param array $credentials
      * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $credentials) {
-        return $this->adldap->authenticate($credentials[User::$usernameField], $credentials['password']);
+    public function validateCredentials(Authenticatable $user, array $credentials)
+    {
+        $username = $credentials[$this->usernameField];
+        return $this->adldap->authenticate($username, $credentials['password']);
     }
-
 }

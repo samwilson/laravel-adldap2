@@ -2,12 +2,15 @@
 
 namespace Adldap\Laravel;
 
-class User implements \Illuminate\Contracts\Auth\Authenticatable {
+class User implements \Illuminate\Contracts\Auth\Authenticatable, UserInterface
+{
 
     use \Illuminate\Auth\Authenticatable;
 
-    /** @var string The name of the unique identifier field. */
-    public static $usernameField = 'samaccountname';
+    public static function getAuthIdentifierName()
+    {
+        return 'samaccountname';
+    }
 
     /**
      * Set the unique identifier of the user.
@@ -15,8 +18,9 @@ class User implements \Illuminate\Contracts\Auth\Authenticatable {
      * @param string $username The user's identifier.
      * @return void
      */
-    public function setAuthIdentifier($username) {
-        return $this->{self::$usernameField} = $username;
+    public function setAuthIdentifier($username)
+    {
+        return $this->{self::getAuthIdentifierName()} = $username;
     }
 
     /**
@@ -24,8 +28,8 @@ class User implements \Illuminate\Contracts\Auth\Authenticatable {
      *
      * @return mixed
      */
-    public function getAuthIdentifier() {
-        return $this->{self::$usernameField};
+    public function getAuthIdentifier()
+    {
+        return $this->{self::getAuthIdentifierName()};
     }
-
 }

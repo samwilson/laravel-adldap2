@@ -26,9 +26,10 @@ In `config/auth.php` set:
     'driver' => 'adldap',
     'model' => '\\Adldap\\Laravel\\User',
 
-The model can be any class that implements the
+The model can be any class that implements both the
 [`Illuminate\Contracts\Auth\Authenticatable`](http://laravel.com/api/5.0/Illuminate/Contracts/Auth/Authenticatable.html)
-interface. A basic model is provided; this can be extended or replaced.
+and `Adldap\Laravel\UserInterface` interfaces.
+A basic model is provided; this can be extended or replaced.
 
 Create `config/adldap.php` with:
 
